@@ -167,8 +167,8 @@ int main(void)
                 if (rayColorReverse and rayColor.g > 0) rayColor.g-=15;
                 if (rayColor.g == 0) rayColorReverse = false;
                 if (greenCircleColor.a < 255) greenCircleColor.a += 5;
-                if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenCircleX > 0) greenCircleX -= GetFrameTime()*60.0f*greenCircleSpeed;
-                if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenCircleX < (screenWidth - greenCircleSize)) greenCircleX += GetFrameTime()*60.0f*greenCircleSpeed;
+                if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenCircleX > 0) greenCircleX -= (int)(GetFrameTime()*60.0f*greenCircleSpeed);
+                if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenCircleX < (screenWidth - greenCircleSize)) greenCircleX += (int)(GetFrameTime()*60.0f*greenCircleSpeed);
                 if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
                 if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
                 if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy+=GetFrameTime()*60.0f*2; if (rayEnergy > 100) rayEnergy = 100;
