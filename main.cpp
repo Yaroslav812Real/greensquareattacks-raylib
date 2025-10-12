@@ -71,6 +71,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "Yarix game");
     InitAudioDevice();
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+    SetConfigFlags(FLAG_VSYNC_HINT);
 
     Shader grayscale = LoadShader(0, "grayscale.fs"); // Setting up the shader
 
