@@ -298,6 +298,7 @@ int main(void)
     UnloadMusicStream(mus);
     UnloadMusicStream(musPaused);
     UnloadMusicStream(gameOver);
+    UnloadSound(raySound);
     CloseAudioDevice();
     CloseWindow();
     return 0;
