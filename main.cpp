@@ -83,14 +83,14 @@ int main(void)
 
     Sound raySound = LoadSound("ray.ogg"); // Setting up the sound
 
-    // Rectangle variables
+    // Creating the rectangles
     Rectangle redCircle;
     Rectangle greenCircleBox;
     Rectangle ray;
     Rectangle greenCircleLight;
     Rectangle rayLight;
 
-    // Button variables
+    // Creating the buttons
     Button startButton;
     startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 20)};
     Button settingsButton;
@@ -102,6 +102,10 @@ int main(void)
     testButton.position = {screenWidth / 2 - (testButton.width / 2), (screenHeight / 20)};
     Button backButton;
     backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
+
+    // Creating a checkerboard
+    Image checkerboardImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, PURPLE, DARKPURPLE);
+    Texture2D checkerboardTexture = LoadTextureFromImage(checkerboardImage);
 
     while (!WindowShouldClose())
     {
@@ -255,7 +259,7 @@ int main(void)
                 {
                     if (paused) BeginShaderMode(grayscale);
 
-                        DrawRectangle(0, 0, screenWidth, screenHeight, DARKBLUE); // Drawing the background
+                        DrawTexture(checkerboardTexture, 0, 0, WHITE); // Drawing the background
 
                         // Drawing the red circle and the green circle
                         if (!redCircleDestroyed) DrawRectangleRounded(redCircle, true, 25, redCircleColor);
