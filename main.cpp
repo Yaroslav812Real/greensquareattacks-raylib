@@ -60,8 +60,7 @@ bool rayCollision = false; // Collision status
 // Score variables
 bool giveScore = true;
 int score = 0;
-int constantBestScore = 0;
-int currentBestScore = 0;
+int bestScore = 0;
 
 int main(void)
 {
@@ -207,7 +206,7 @@ int main(void)
                 }
                 if (redCircleHealth <= 0)
                 {
-                    if (giveScore) score++; giveScore = false;
+                    if (giveScore) score++; if (bestScore < score) bestScore = score; giveScore = false;
                     redCircleXSpeed = 0; redCircleYSpeed = 0;
                     if (redCircleColor.a > 0) redCircleColor.a -= 20;
                     if (redCircleColor.a == 15) redCircleColor.a = 0, redCircleDestroyed = true;
@@ -270,9 +269,9 @@ int main(void)
 
                         DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE); // Displaying energy count on the screen
 
-                        DrawText(TextFormat("Score: %02i", score), 10, 70, 50, WHITE); // Displaying score on the screen
+                        DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE); // Displaying score on the screen
 
-                        DrawText(TextFormat("Best score: %02i", constantBestScore), 10, 130, 50, WHITE); // Displaying best score on the screen
+                        DrawText(TextFormat("Best score: %i", bestScore), 10, 130, 50, WHITE); // Displaying best score on the screen
 
                         if (paused) DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)50, 5).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)50, 5).x/4}, 50, 5, WHITE); // Displaying text if the game is paused
 
@@ -286,8 +285,8 @@ int main(void)
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 175});
                     DrawTextEx(GetFontDefault(), "Retry", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawText(TextFormat("Energy: N/A"), 10, 10, 50, WHITE);
-                    DrawText(TextFormat("Score: %02i", currentBestScore), 10, 70, 50, WHITE);
-                    DrawText(TextFormat("Best score: %02i", constantBestScore), 10, 130, 50, WHITE);
+                    DrawText(TextFormat("Score: %i", bestScore), 10, 70, 50, WHITE);
+                    DrawText(TextFormat("Best score: %i", bestScore), 10, 130, 50, WHITE);
                 } break;
                 default: break;
             }
@@ -324,8 +323,8 @@ void InitGame(void)
     rayColorReverse = false;
     rayActivated = false;
     giveScore = true;
-    if (score > constantBestScore) constantBestScore = score;
-    currentBestScore = score;
+    if (score > bestScore) bestScore = score;
+    bestScore = score;
     score = 0;
 }
 
