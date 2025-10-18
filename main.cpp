@@ -2,7 +2,7 @@
 #include "button.hpp"
 
 static void InitGame(void);
-static void ResetRedCircle(void);
+static void ResetRedSquare(void);
 
 const int screenWidth = 1280; const int screenHeight = 720; // Setting up the screen resolution
 
@@ -19,35 +19,35 @@ bool buttonAction = false;
 
 bool paused = false; // Pause variable
 
-// Red circle variables
-const int redCircleOriginalHealth = 20; // Originalinal health
-const int redCircleMinSize = screenHeight / 7.2;
-const int redCircleMaxSize = screenHeight / 2.4;
-const float redCircleMinSpeed = screenWidth / 128; // Minimal speed
-const float redCircleMaxSpeed = screenWidth / 64; // Maximal speed
-const Color redCircleOriginalColor = RED; // Originalinal color
-int redCircleSize; // Size
-int redCircleX; // X position
-int redCircleY; // Y position
-int redCircleHealth = redCircleOriginalHealth; // Current health
-float redCircleXSpeed; // Horizontal speed
-float redCircleYSpeed; // Vertical speed
-Color redCircleColor = redCircleOriginalColor; // Current color
-bool redCircleDestroyed = false; // Status
-bool redCircleXSquish = false;
-bool redCircleYSquish = false;
+// Red square variables
+const int redSquareOriginalHealth = 20; // Originalinal health
+const int redSquareMinSize = screenHeight / 7.2;
+const int redSquareMaxSize = screenHeight / 2.4;
+const float redSquareMinSpeed = screenWidth / 128; // Minimal speed
+const float redSquareMaxSpeed = screenWidth / 64; // Maximal speed
+const Color redSquareOriginalColor = RED; // Originalinal color
+int redSquareSize; // Size
+int redSquareX; // X position
+int redSquareY; // Y position
+int redSquareHealth = redSquareOriginalHealth; // Current health
+float redSquareXSpeed; // Horizontal speed
+float redSquareYSpeed; // Vertical speed
+Color redSquareColor = redSquareOriginalColor; // Current color
+bool redSquareDestroyed = false; // Status
+bool redSquareXSquish = false;
+bool redSquareYSquish = false;
     
-// Green circle variables
-const int greenCircleOriginalSize = screenHeight / 7.2; // Originalinal size
-const int greenCircleOriginalX = screenWidth - greenCircleOriginalSize; // Originalinal X position
-const int greenCircleOriginalY = screenHeight - greenCircleOriginalSize; // Originalinal Y position
-const float greenCircleOriginalSpeed = screenWidth / 64; // Originalinal speed
-const Color greenCircleOriginalColor = GREEN; // Originalinal color
-int greenCircleSize = screenHeight / 7.2; // Current size
-int greenCircleX = greenCircleOriginalX; // Current X position
-int greenCircleY = greenCircleOriginalY; // Current Y position
-float greenCircleSpeed = greenCircleOriginalSpeed; // Current speed
-Color greenCircleColor = greenCircleOriginalColor;
+// Green square variables
+const int greenSquareOriginalSize = screenHeight / 7.2; // Originalinal size
+const int greenSquareOriginalX = screenWidth - greenSquareOriginalSize; // Originalinal X position
+const int greenSquareOriginalY = screenHeight - greenSquareOriginalSize; // Originalinal Y position
+const float greenSquareOriginalSpeed = screenWidth / 64; // Originalinal speed
+const Color greenSquareOriginalColor = GREEN; // Originalinal color
+int greenSquareSize = screenHeight / 7.2; // Current size
+int greenSquareX = greenSquareOriginalX; // Current X position
+int greenSquareY = greenSquareOriginalY; // Current Y position
+float greenSquareSpeed = greenSquareOriginalSpeed; // Current speed
+Color greenSquareColor = greenSquareOriginalColor;
 bool enemyCollision = false; // Collision status
 
 // Ray variables
@@ -84,10 +84,10 @@ int main(void)
     Sound raySound = LoadSound("ray.ogg"); // Setting up the sound
 
     // Creating the rectangles
-    Rectangle redCircle;
-    Rectangle greenCircleBox;
+    Rectangle redSquare;
+    Rectangle greenSquareBox;
     Rectangle ray;
-    Rectangle greenCircleLight;
+    Rectangle greenSquareLight;
     Rectangle rayLight;
 
     // Creating the buttons
@@ -103,9 +103,13 @@ int main(void)
     Button backButton;
     backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
 
+    // Creating a checkerboard background for menus
+    Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
+    Texture2D checkerboardMenuTexture = LoadTextureFromImage(checkerboardMenuImage);
+
     // Creating a checkerboard
-    Image checkerboardImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, BLUE, DARKBLUE);
-    Texture2D checkerboardTexture = LoadTextureFromImage(checkerboardImage);
+    Image checkerboardIngameImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, BLUE, DARKBLUE);
+    Texture2D checkerboardIngameTexture = LoadTextureFromImage(checkerboardIngameImage);
 
     while (!WindowShouldClose())
     {
@@ -144,74 +148,74 @@ int main(void)
                 if (paused and IsMusicStreamPlaying(mus)) StopMusicStream(mus), PlayMusicStream(musPaused);
                 if (!paused and !IsMusicStreamPlaying(mus)) StopMusicStream(musPaused), PlayMusicStream(mus);
 
-                // Setting up the red circle
-                redCircle = {(float)redCircleX, (float)redCircleY, (float)redCircleSize, (float)redCircleSize};
-                if (redCircleY < 0) redCircleY = 0;
-                if (redCircleX < 0) redCircleX = 0;
-                if (redCircleY > (screenHeight - redCircleSize)) redCircleY = screenHeight - redCircleSize;
-                if (redCircleX > (screenWidth - redCircleSize)) redCircleX = screenWidth - redCircleSize;
+                // Setting up the red square
+                redSquare = {(float)redSquareX, (float)redSquareY, (float)redSquareSize, (float)redSquareSize};
+                if (redSquareY < 0) redSquareY = 0;
+                if (redSquareX < 0) redSquareX = 0;
+                if (redSquareY > (screenHeight - redSquareSize)) redSquareY = screenHeight - redSquareSize;
+                if (redSquareX > (screenWidth - redSquareSize)) redSquareX = screenWidth - redSquareSize;
 
-                // Setting up the green circle and ray
-                greenCircleBox = {(float)greenCircleX, (float)greenCircleY, (float)greenCircleSize, (float)greenCircleSize};
-                ray = {(float)greenCircleX + (greenCircleSize / 4), 0, (float)greenCircleSize / 2, (float)screenHeight - (greenCircleSize / 2)};
-                greenCircleLight = {(float)greenCircleX - (greenCircleSize / 2), (float)greenCircleY - (greenCircleSize / 2), (float)greenCircleSize * 2, (float)greenCircleSize * 2};
-                rayLight = {(float)greenCircleX, 0, (float)greenCircleSize, (float)screenHeight - (greenCircleSize / 2)};
-                if (greenCircleY < 0) greenCircleY = 0;
-                if (greenCircleX < 0) greenCircleX = 0;
-                if (greenCircleY > (screenHeight - greenCircleSize)) greenCircleY = screenHeight - greenCircleSize;
-                if (greenCircleX > (screenWidth - greenCircleSize)) greenCircleX = screenWidth - greenCircleSize;
+                // Setting up the green square and ray
+                greenSquareBox = {(float)greenSquareX, (float)greenSquareY, (float)greenSquareSize, (float)greenSquareSize};
+                ray = {(float)greenSquareX + (greenSquareSize / 4), 0, (float)greenSquareSize / 2, (float)screenHeight - (greenSquareSize / 2)};
+                greenSquareLight = {(float)greenSquareX - (greenSquareSize / 2), (float)greenSquareY - (greenSquareSize / 2), (float)greenSquareSize * 2, (float)greenSquareSize * 2};
+                rayLight = {(float)greenSquareX, 0, (float)greenSquareSize, (float)screenHeight - (greenSquareSize / 2)};
+                if (greenSquareY < 0) greenSquareY = 0;
+                if (greenSquareX < 0) greenSquareX = 0;
+                if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
+                if (greenSquareX > (screenWidth - greenSquareSize)) greenSquareX = screenWidth - greenSquareSize;
 
                 if (!paused)
                 {
                 
-                if (redCircleColor.a < 255 and redCircleHealth >= redCircleOriginalHealth) redCircleColor.a += 5;
-                redCircleX += GetFrameTime()*60.0f*redCircleXSpeed;
-                redCircleY += GetFrameTime()*60.0f*redCircleYSpeed;
-                if ((redCircleX >= screenWidth - redCircleSize) or (redCircleX <= 0)) redCircleXSpeed *= -1;
-                if ((redCircleY >= screenHeight - redCircleSize) or (redCircleY <= 0)) redCircleYSpeed *= -1;
-                if (redCircleDestroyed) ResetRedCircle();
+                if (redSquareColor.a < 255 and redSquareHealth >= redSquareOriginalHealth) redSquareColor.a += 5;
+                redSquareX += (int)(GetFrameTime()*60.0f*redSquareXSpeed);
+                redSquareY += (int)(GetFrameTime()*60.0f*redSquareYSpeed);
+                if ((redSquareX >= screenWidth - redSquareSize) or (redSquareX <= 0)) redSquareXSpeed *= -1;
+                if ((redSquareY >= screenHeight - redSquareSize) or (redSquareY <= 0)) redSquareYSpeed *= -1;
+                if (redSquareDestroyed) ResetRedSquare();
 
                 if (!rayColorReverse and rayColor.g < 255) rayColor.g+=15;
                 if (rayColor.g == 255) rayColorReverse = true;
                 if (rayColorReverse and rayColor.g > 0) rayColor.g-=15;
                 if (rayColor.g == 0) rayColorReverse = false;
-                if (greenCircleColor.a < 255) greenCircleColor.a += 5;
-                if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenCircleX > 0) greenCircleX -= (int)(GetFrameTime()*60.0f*greenCircleSpeed);
-                if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenCircleX < (screenWidth - greenCircleSize)) greenCircleX += (int)(GetFrameTime()*60.0f*greenCircleSpeed);
+                if (greenSquareColor.a < 255) greenSquareColor.a += 5;
+                if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= (int)(GetFrameTime()*60.0f*greenSquareSpeed);
+                if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += (int)(GetFrameTime()*60.0f*greenSquareSpeed);
                 if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
                 if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
-                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy+=GetFrameTime()*60.0f*2; if (rayEnergy > 100) rayEnergy = 100;
-                if (rayActivated and rayEnergy > 0) rayEnergy-=GetFrameTime()*60.0f*1; if (rayEnergy < 0) rayEnergy = 0;
-                if (greenCircleY < 0) greenCircleY = 0;
-                if (greenCircleX < 0) greenCircleX = 0;
-                if (greenCircleY > (screenHeight - greenCircleSize)) greenCircleY = screenHeight - greenCircleSize;
-                if (greenCircleX > (screenWidth - greenCircleSize)) greenCircleX = screenWidth - greenCircleSize;
+                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy+=(int)(GetFrameTime()*60.0f*1); if (rayEnergy > 100) rayEnergy = 100;
+                if (rayActivated and rayEnergy > 0) rayEnergy-=(int)(GetFrameTime()*60.0f*1); if (rayEnergy < 0) rayEnergy = 0;
+                if (greenSquareY < 0) greenSquareY = 0;
+                if (greenSquareX < 0) greenSquareX = 0;
+                if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
+                if (greenSquareX > (screenWidth - greenSquareSize)) greenSquareX = screenWidth - greenSquareSize;
 
                 // Collisions
 
                 // Enemy collision
-                enemyCollision = (CheckCollisionRecs(redCircle, greenCircleBox));
-                if (enemyCollision) GetCollisionRec(redCircle, greenCircleBox);
-                if (enemyCollision and redCircleColor.a == 255) InitGame(), currentScreen = GAMEOVER;
+                enemyCollision = (CheckCollisionRecs(redSquare, greenSquareBox));
+                if (enemyCollision) GetCollisionRec(redSquare, greenSquareBox);
+                if (enemyCollision and redSquareColor.a == 255) InitGame(), currentScreen = GAMEOVER;
 
                 // Ray collision
-                rayCollision = (CheckCollisionRecs(redCircle, ray));
-                if (rayCollision) GetCollisionRec(redCircle, ray);
-                if (redCircleColor.a == 255 and rayCollision and rayActivated)
+                rayCollision = (CheckCollisionRecs(redSquare, ray));
+                if (rayCollision) GetCollisionRec(redSquare, ray);
+                if (redSquareColor.a == 255 and rayCollision and rayActivated)
                 {
-                    redCircleHealth--;
-                    if (redCircleColor.r > 0) redCircleColor.r-=10;
-                    if (redCircleXSpeed > 10) redCircleXSpeed--;
-                    if (redCircleXSpeed < -10) redCircleXSpeed++;
-                    if (redCircleYSpeed > 10) redCircleYSpeed--;
-                    if (redCircleYSpeed < -10) redCircleYSpeed++;
+                    redSquareHealth-=(int)(GetFrameTime()*60.0f*1);
+                    if (redSquareColor.r > 0) redSquareColor.r-=(int)(GetFrameTime()*60.0f*10);
+                    if (redSquareXSpeed > 10) redSquareXSpeed-=(int)(GetFrameTime()*60.0f*1);
+                    if (redSquareXSpeed < -10) redSquareXSpeed+=(int)(GetFrameTime()*60.0f*1);
+                    if (redSquareYSpeed > 10) redSquareYSpeed-=(int)(GetFrameTime()*60.0f*1);
+                    if (redSquareYSpeed < -10) redSquareYSpeed+=(int)(GetFrameTime()*60.0f*1);
                 }
-                if (redCircleHealth <= 0)
+                if (redSquareHealth <= 0)
                 {
                     if (giveScore) score++; if (bestScore < score) bestScore = score; giveScore = false;
-                    redCircleXSpeed = 0; redCircleYSpeed = 0;
-                    if (redCircleColor.a > 0) redCircleColor.a -= 20;
-                    if (redCircleColor.a == 15) redCircleColor.a = 0, redCircleDestroyed = true;
+                    redSquareXSpeed = 0; redSquareYSpeed = 0;
+                    if (redSquareColor.a > 0) redSquareColor.a -= (int)(GetFrameTime()*60.0f*20);
+                    if (redSquareColor.a == 15) redSquareColor.a = 0, redSquareDestroyed = true;
                 }
 
                 }
@@ -236,6 +240,7 @@ int main(void)
                 case MENU:
                 {
                     ClearBackground(BLACK);
+                    DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
                     startButton.draw(mousePoint);
                     settingsButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
@@ -246,6 +251,7 @@ int main(void)
                 case SETTINGS:
                 {
                     ClearBackground(BLACK);
+                    DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
                     testButton.draw(mousePoint);
                     backButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
@@ -257,17 +263,17 @@ int main(void)
                 {
                     if (paused) BeginShaderMode(grayscale);
 
-                        DrawTexture(checkerboardTexture, 0, 0, WHITE); // Drawing the background
+                        DrawTexture(checkerboardIngameTexture, 0, 0, WHITE); // Drawing the background
 
-                        // Drawing the red circle and the green circle
-                        if (!redCircleDestroyed) DrawRectangleRounded(redCircle, true, 25, redCircleColor);
-                        DrawRectangleRounded(greenCircleBox, true, 25, greenCircleColor);
+                        // Drawing the red square and the green square
+                        if (!redSquareDestroyed) DrawRectangleRec(redSquare, redSquareColor);
+                        DrawRectangleRec(greenSquareBox, greenSquareColor);
 
                         DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200}); // Drawing the gradient
 
-                        // Drawing the ray and making the green circle glow when the ray is activated
-                        if (rayActivated) DrawRectangleRounded(greenCircleLight, true, 25, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
-                        if (rayActivated) DrawRectangleRec(ray, rayColor), DrawRectangleRounded(greenCircleBox, true, 25, GREEN);
+                        // Drawing the ray and making the green square glow when the ray is activated
+                        if (rayActivated) DrawRectangleRec(greenSquareLight, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
+                        if (rayActivated) DrawRectangleRec(ray, rayColor), DrawRectangleRec(greenSquareBox, GREEN);
 
                         DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE); // Displaying energy count on the screen
 
@@ -283,6 +289,7 @@ int main(void)
                 case GAMEOVER:
                 {
                     ClearBackground(BLACK);
+                    DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
                     retryButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
                     DrawTextEx(GetFontDefault(), "Retry", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
@@ -307,19 +314,19 @@ int main(void)
 
 void InitGame(void)
 {
-    redCircleX = GetRandomValue(0, screenWidth - redCircleSize);
-    redCircleY = GetRandomValue(0, screenHeight - redCircleSize);
-    redCircleSize = GetRandomValue(redCircleMinSize, redCircleMaxSize);
-    redCircleXSpeed = GetRandomValue(redCircleMinSpeed, redCircleMaxSpeed);
-    redCircleYSpeed = GetRandomValue(redCircleMinSpeed, redCircleMaxSpeed);
-    redCircleHealth = redCircleOriginalHealth;
-    redCircleColor = redCircleOriginalColor;
-    redCircleColor.a = 0;
-    redCircleDestroyed = false;
-    greenCircleX = greenCircleOriginalX;
-    greenCircleY = greenCircleOriginalY;
-    greenCircleColor = greenCircleOriginalColor;
-    greenCircleColor.a = 0;
+    redSquareX = GetRandomValue(0, screenWidth - redSquareSize);
+    redSquareY = GetRandomValue(0, screenHeight - redSquareSize);
+    redSquareSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareYSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareHealth = redSquareOriginalHealth;
+    redSquareColor = redSquareOriginalColor;
+    redSquareColor.a = 0;
+    redSquareDestroyed = false;
+    greenSquareX = greenSquareOriginalX;
+    greenSquareY = greenSquareOriginalY;
+    greenSquareColor = greenSquareOriginalColor;
+    greenSquareColor.a = 0;
     rayEnergy = 100;
     rayColor = {255, 255, 0, 255};
     rayColorReverse = false;
@@ -330,16 +337,16 @@ void InitGame(void)
     score = 0;
 }
 
-void ResetRedCircle(void)
+void ResetRedSquare(void)
 {
-    redCircleX = GetRandomValue(0, screenWidth - redCircleSize);
-    redCircleY = GetRandomValue(0, screenHeight - redCircleSize);
-    redCircleSize = GetRandomValue(redCircleMinSize, redCircleMaxSize);
-    redCircleXSpeed = GetRandomValue(redCircleMinSpeed, redCircleMaxSpeed);
-    redCircleYSpeed = GetRandomValue(redCircleMinSpeed, redCircleMaxSpeed);
-    redCircleHealth = redCircleOriginalHealth;
-    redCircleColor = redCircleOriginalColor;
-    redCircleColor.a = 0;
-    redCircleDestroyed = false;
+    redSquareX = GetRandomValue(0, screenWidth - redSquareSize);
+    redSquareY = GetRandomValue(0, screenHeight - redSquareSize);
+    redSquareSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareYSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareHealth = redSquareOriginalHealth;
+    redSquareColor = redSquareOriginalColor;
+    redSquareColor.a = 0;
+    redSquareDestroyed = false;
     giveScore = true;
 }
