@@ -20,12 +20,12 @@ bool buttonAction = false;
 bool paused = false; // Pause variable
 
 // Red square variables
-const int redSquareOriginalHealth = 20; // Originalinal health
+const int redSquareOriginalHealth = 20; // Original health
 const int redSquareMinSize = screenHeight / 7.2;
 const int redSquareMaxSize = screenHeight / 2.4;
 const float redSquareMinSpeed = screenWidth / 128; // Minimal speed
 const float redSquareMaxSpeed = screenWidth / 64; // Maximal speed
-const Color redSquareOriginalColor = RED; // Originalinal color
+const Color redSquareOriginalColor = RED; // Original color
 int redSquareSize; // Size
 int redSquareX; // X position
 int redSquareY; // Y position
@@ -38,11 +38,11 @@ bool redSquareXSquish = false;
 bool redSquareYSquish = false;
     
 // Green square variables
-const int greenSquareOriginalSize = screenHeight / 7.2; // Originalinal size
-const int greenSquareOriginalX = screenWidth - greenSquareOriginalSize; // Originalinal X position
-const int greenSquareOriginalY = screenHeight - greenSquareOriginalSize; // Originalinal Y position
-const float greenSquareOriginalSpeed = screenWidth / 64; // Originalinal speed
-const Color greenSquareOriginalColor = GREEN; // Originalinal color
+const int greenSquareOriginalSize = screenHeight / 7.2; // Original size
+const int greenSquareOriginalX = screenWidth - greenSquareOriginalSize; // Original X position
+const int greenSquareOriginalY = screenHeight - greenSquareOriginalSize; // Original Y position
+const float greenSquareOriginalSpeed = screenWidth / 64; // Original speed
+const Color greenSquareOriginalColor = GREEN; // Original color
 int greenSquareSize = screenHeight / 7.2; // Current size
 int greenSquareX = greenSquareOriginalX; // Current X position
 int greenSquareY = greenSquareOriginalY; // Current Y position
