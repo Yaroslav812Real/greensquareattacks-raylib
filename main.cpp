@@ -92,14 +92,14 @@ int main(void)
 
     // Creating the buttons
     Button startButton;
-    startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 20)};
+    startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
     Button settingsButton;
     settingsButton.position = {screenWidth / 2 - (settingsButton.width / 2), screenHeight - (settingsButton.height) - (screenHeight / 20)};
     Button retryButton;
     retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
     Button testButton;
     testButton.width = screenWidth / 1.5;
-    testButton.position = {screenWidth / 2 - (testButton.width / 2), (screenHeight / 20)};
+    testButton.position = {screenWidth / 2 - (testButton.width / 2), (screenHeight / 5)};
     Button backButton;
     backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
 
@@ -244,6 +244,7 @@ int main(void)
                     startButton.draw(mousePoint);
                     settingsButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                    DrawTextEx(GetFontDefault(), "Green Square Attacks", {(screenWidth / 2) - MeasureTextEx(GetFontDefault(), "Green Square Attacks", (float)100, 10).x/2, 75 - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
                     DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (startButton.width / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (startButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Options", {settingsButton.position.x + (settingsButton.width / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, settingsButton.position.y + (settingsButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;

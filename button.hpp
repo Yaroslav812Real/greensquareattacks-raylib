@@ -5,7 +5,7 @@ class Button
 {
     public:
         float width = 1280 / 2;
-        float height = 720 / 2.5;
+        float height = 720 / 3;
         Vector2 position;
         Button();
         void draw(Vector2 mousePoint);
