@@ -240,7 +240,7 @@ int main(void)
                     ClearBackground(BLACK);
                     startButton.draw(mousePoint);
                     settingsButton.draw(mousePoint);
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 175});
+                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
                     DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (startButton.width / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (startButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Options", {settingsButton.position.x + (settingsButton.width / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, settingsButton.position.y + (settingsButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
@@ -250,7 +250,7 @@ int main(void)
                     ClearBackground(BLACK);
                     testButton.draw(mousePoint);
                     backButton.draw(mousePoint);
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 175});
+                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
                     DrawTextEx(GetFontDefault(), "Fullscreen", {testButton.position.x + (testButton.width / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, testButton.position.y + (testButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (backButton.width / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (backButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
@@ -265,7 +265,7 @@ int main(void)
                         if (!redCircleDestroyed) DrawRectangleRounded(redCircle, true, 25, redCircleColor);
                         DrawRectangleRounded(greenCircleBox, true, 25, greenCircleColor);
 
-                        DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 175}); // Drawing the gradient
+                        DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200}); // Drawing the gradient
 
                         // Drawing the ray and making the green circle glow when the ray is activated
                         if (rayActivated) DrawRectangleRounded(greenCircleLight, true, 25, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
@@ -286,7 +286,7 @@ int main(void)
                 {
                     ClearBackground(BLACK);
                     retryButton.draw(mousePoint);
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 175});
+                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
                     DrawTextEx(GetFontDefault(), "Retry", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawText(TextFormat("Energy: N/A"), 10, 10, 50, WHITE);
                     DrawText(TextFormat("Score: %i", bestScore), 10, 70, 50, WHITE);
