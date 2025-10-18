@@ -104,7 +104,7 @@ int main(void)
     backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
 
     // Creating a checkerboard
-    Image checkerboardImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, PURPLE, DARKPURPLE);
+    Image checkerboardImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, BLUE, DARKBLUE);
     Texture2D checkerboardTexture = LoadTextureFromImage(checkerboardImage);
 
     while (!WindowShouldClose())
