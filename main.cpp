@@ -125,9 +125,7 @@ int main(void)
                 if (backButton.isReleased(mousePoint)) currentScreen = MENU;
                 if (testButton.isReleased(mousePoint))
                 {
-                    SetConfigFlags(FLAG_FULLSCREEN_MODE);
-                    CloseWindow();
-                    InitWindow(screenWidth, screenHeight, "Yarix game");
+                    ToggleFullscreen();
                 }
             } break;
 
