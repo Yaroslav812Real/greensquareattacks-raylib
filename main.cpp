@@ -81,7 +81,7 @@ int main(void)
     Music gameOver = LoadMusicStream("mus_gameover.ogg");
     PlayMusicStream(menu);
 
-    Sound raySound = LoadSound("ray.ogg"); // Setting up the sound
+    Sound raySound = LoadSound("sfx_ray.ogg"); // Setting up the sound
 
     // Creating the rectangles
     Rectangle redSquare;
