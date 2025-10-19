@@ -9,3 +9,5 @@ Space – shoot
 Enter – pause
 
 Escape – exit
+
+Itch: https://yaroslav812.itch.io/greensquareattacks-raylib
