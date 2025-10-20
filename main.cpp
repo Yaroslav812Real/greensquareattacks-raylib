@@ -119,8 +119,9 @@ int main(void)
             case MENU:
             {
                 UpdateMusicStream(menu);
-                if (optionsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
                 if (startButton.isReleased(mousePoint)) InitGame(), PlayMusicStream(mus), currentScreen = INGAME;
+                if (optionsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
+                if (exitButton.isReleased(mousePoint)) CloseWindow();
             } break;
 
             case SETTINGS:
