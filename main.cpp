@@ -183,8 +183,8 @@ int main(void)
                 if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += (int)(GetFrameTime()*60.0f*greenSquareSpeed);
                 if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
                 if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
-                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy+=(int)(GetFrameTime()*60.0f*1); if (rayEnergy > 100) rayEnergy = 100;
-                if (rayActivated and rayEnergy > 0) rayEnergy-=(int)(GetFrameTime()*60.0f*1); if (rayEnergy < 0) rayEnergy = 0;
+                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
+                if (rayActivated and rayEnergy > 0) rayEnergy--; if (rayEnergy < 0) rayEnergy = 0;
                 if (greenSquareY < 0) greenSquareY = 0;
                 if (greenSquareX < 0) greenSquareX = 0;
                 if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
