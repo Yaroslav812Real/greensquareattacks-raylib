@@ -203,18 +203,18 @@ int main(void)
                 if (rayCollision) GetCollisionRec(redSquare, ray);
                 if (redSquareColor.a == 255 and rayCollision and rayActivated)
                 {
-                    redSquareHealth-=(int)(GetFrameTime()*60.0f*1);
-                    if (redSquareColor.r > 0) redSquareColor.r-=(int)(GetFrameTime()*60.0f*10);
-                    if (redSquareXSpeed > 10) redSquareXSpeed-=(int)(GetFrameTime()*60.0f*1);
-                    if (redSquareXSpeed < -10) redSquareXSpeed+=(int)(GetFrameTime()*60.0f*1);
-                    if (redSquareYSpeed > 10) redSquareYSpeed-=(int)(GetFrameTime()*60.0f*1);
-                    if (redSquareYSpeed < -10) redSquareYSpeed+=(int)(GetFrameTime()*60.0f*1);
+                    redSquareHealth--;
+                    if (redSquareColor.r > 0) redSquareColor.r-=10;
+                    if (redSquareXSpeed > 10) redSquareXSpeed--;
+                    if (redSquareXSpeed < -10) redSquareXSpeed++;
+                    if (redSquareYSpeed > 10) redSquareYSpeed--;
+                    if (redSquareYSpeed < -10) redSquareYSpeed++;
                 }
                 if (redSquareHealth <= 0)
                 {
                     if (giveScore) score++; if (bestScore < score) bestScore = score; giveScore = false;
                     redSquareXSpeed = 0; redSquareYSpeed = 0;
-                    if (redSquareColor.a > 0) redSquareColor.a -= (int)(GetFrameTime()*60.0f*20);
+                    if (redSquareColor.a > 0) redSquareColor.a -= 20;
                     if (redSquareColor.a == 15) redSquareColor.a = 0, redSquareDestroyed = true;
                 }
 
