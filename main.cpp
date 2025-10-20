@@ -66,7 +66,6 @@ int main(void)
 {
 
     // Setting up the game
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "Yarix game");
     InitAudioDevice();
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
