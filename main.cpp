@@ -121,7 +121,11 @@ int main(void)
                 UpdateMusicStream(menu);
                 if (startButton.isReleased(mousePoint)) InitGame(), PlayMusicStream(mus), currentScreen = INGAME;
                 if (optionsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
-                if (exitButton.isReleased(mousePoint)) CloseWindow();
+                if (exitButton.isReleased(mousePoint))
+                {
+                    CloseWindow();
+                    return 0;
+                }
             } break;
 
             case SETTINGS:
