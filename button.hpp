@@ -4,7 +4,7 @@
 class Button
 {
     public:
-        float width = 1280 / 2;
+        float width = 1280 / 1.5;
         float height = 720 / 4;
         Vector2 position;
         Button();

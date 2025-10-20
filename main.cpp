@@ -93,16 +93,15 @@ int main(void)
     Button startButton;
     startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
     Button optionsButton;
-    optionsButton.position = {screenWidth / 2 - (optionsButton.width / 2), screenHeight - (optionsButton.height) - (screenHeight / 20)};
+    optionsButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + (optionsButton.height)};
     Button exitButton;
-    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), screenHeight - (optionsButton.height) - (screenHeight / 20)};
+    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + (optionsButton.height) + (exitButton.height)};
     Button retryButton;
     retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
     Button fullscreenButton;
-    fullscreenButton.width = screenWidth / 1.5;
-    fullscreenButton.position = {screenWidth / 2 - (fullscreenButton.width / 2), (screenHeight / 5)};
+    fullscreenButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
     Button backButton;
-    backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
+    backButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5) + (fullscreenButton.height)};
 
     // Creating a checkerboard background for menus
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
