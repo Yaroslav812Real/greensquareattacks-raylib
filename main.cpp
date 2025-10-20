@@ -96,9 +96,9 @@ int main(void)
     settingsButton.position = {screenWidth / 2 - (settingsButton.width / 2), screenHeight - (settingsButton.height) - (screenHeight / 20)};
     Button retryButton;
     retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
-    Button testButton;
-    testButton.width = screenWidth / 1.5;
-    testButton.position = {screenWidth / 2 - (testButton.width / 2), (screenHeight / 5)};
+    Button fullscreenButton;
+    fullscreenButton.width = screenWidth / 1.5;
+    fullscreenButton.position = {screenWidth / 2 - (fullscreenButton.width / 2), (screenHeight / 5)};
     Button backButton;
     backButton.position = {screenWidth / 2 - (backButton.width / 2), screenHeight - (backButton.height) - (screenHeight / 20)};
 
@@ -126,7 +126,7 @@ int main(void)
             {
                 UpdateMusicStream(menu);
                 if (backButton.isReleased(mousePoint)) currentScreen = MENU;
-                if (testButton.isReleased(mousePoint))
+                if (fullscreenButton.isReleased(mousePoint))
                 {
                     ToggleFullscreen();
                 }
@@ -252,10 +252,10 @@ int main(void)
                 {
                     ClearBackground(BLACK);
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
-                    testButton.draw(mousePoint);
+                    fullscreenButton.draw(mousePoint);
                     backButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
-                    DrawTextEx(GetFontDefault(), "Fullscreen", {testButton.position.x + (testButton.width / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, testButton.position.y + (testButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenButton.position.x + (fullscreenButton.width / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, fullscreenButton.position.y + (fullscreenButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (backButton.width / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (backButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
 
