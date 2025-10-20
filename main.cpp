@@ -92,8 +92,10 @@ int main(void)
     // Creating the buttons
     Button startButton;
     startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
-    Button settingsButton;
-    settingsButton.position = {screenWidth / 2 - (settingsButton.width / 2), screenHeight - (settingsButton.height) - (screenHeight / 20)};
+    Button optionsButton;
+    optionsButton.position = {screenWidth / 2 - (optionsButton.width / 2), screenHeight - (optionsButton.height) - (screenHeight / 20)};
+    Button exitButton;
+    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), screenHeight - (optionsButton.height) - (screenHeight / 20)};
     Button retryButton;
     retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
     Button fullscreenButton;
@@ -118,7 +120,7 @@ int main(void)
             case MENU:
             {
                 UpdateMusicStream(menu);
-                if (settingsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
+                if (optionsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
                 if (startButton.isReleased(mousePoint)) InitGame(), PlayMusicStream(mus), currentScreen = INGAME;
             } break;
 
@@ -241,11 +243,13 @@ int main(void)
                     ClearBackground(BLACK);
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
                     startButton.draw(mousePoint);
-                    settingsButton.draw(mousePoint);
+                    optionsButton.draw(mousePoint);
+                    exitButton.draw(mousePoint);
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
                     DrawTextEx(GetFontDefault(), "Green Square Attacks", {(screenWidth / 2) - MeasureTextEx(GetFontDefault(), "Green Square Attacks", (float)100, 10).x/2, 75 - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
                     DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (startButton.width / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (startButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Options", {settingsButton.position.x + (settingsButton.width / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, settingsButton.position.y + (settingsButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Options", {optionsButton.position.x + (optionsButton.width / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, optionsButton.position.y + (optionsButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Exit", {exitButton.position.x + (exitButton.width / 2) - MeasureTextEx(GetFontDefault(), "Exit", (float)150, 15).x/2, exitButton.position.y + (exitButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
 
                 case SETTINGS:
