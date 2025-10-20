@@ -91,17 +91,19 @@ int main(void)
 
     // Creating the buttons
     Button startButton;
-    startButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
+    startButton.position = {(screenWidth / 2) - (startButton.width / 2), (screenHeight / 5)};
     Button optionsButton;
-    optionsButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + (optionsButton.height)};
+    optionsButton.position = {(screenWidth / 2) - (optionsButton.width / 2), screenHeight / 5 + optionsButton.height};
     Button exitButton;
-    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + (optionsButton.height) + (exitButton.height)};
+    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + optionsButton.height + exitButton.height};
+    Button vsyncButton;
+    vsyncButton.position = {(screenWidth / 2) - (startButton.width / 2), (screenHeight / 5)};
+    Button fullscreenButton;
+    fullscreenButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5) + fullscreenButton.height};
+    Button backButton;
+    backButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5) + fullscreenButton.height + backButton.height};
     Button retryButton;
     retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
-    Button fullscreenButton;
-    fullscreenButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5)};
-    Button backButton;
-    backButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5) + (fullscreenButton.height)};
 
     // Creating a checkerboard background for menus
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
