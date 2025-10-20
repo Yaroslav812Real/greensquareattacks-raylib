@@ -7,7 +7,7 @@ static void ResetRedSquare(void);
 const int screenWidth = 1280; const int screenHeight = 720; // Setting up the screen resolution
 
 // Game screen variable
-typedef enum GameScreen {MENU, SETTINGS, INGAME, GAMEOVER} GameScreen;
+typedef enum GameScreen {MENU, OPTIONS, INGAME, GAMEOVER} GameScreen;
 GameScreen currentScreen = MENU;
 
 // Button variables
@@ -96,8 +96,6 @@ int main(void)
     optionsButton.position = {(screenWidth / 2) - (optionsButton.width / 2), screenHeight / 5 + optionsButton.height};
     Button exitButton;
     exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + optionsButton.height + exitButton.height};
-    Button vsyncButton;
-    vsyncButton.position = {(screenWidth / 2) - (startButton.width / 2), (screenHeight / 5)};
     Button fullscreenButton;
     fullscreenButton.position = {screenWidth / 2 - (startButton.width / 2), (screenHeight / 5) + fullscreenButton.height};
     Button backButton;
@@ -122,7 +120,7 @@ int main(void)
             {
                 UpdateMusicStream(menu);
                 if (startButton.isReleased(mousePoint)) InitGame(), PlayMusicStream(mus), currentScreen = INGAME;
-                if (optionsButton.isReleased(mousePoint)) currentScreen = SETTINGS;
+                if (optionsButton.isReleased(mousePoint)) currentScreen = OPTIONS;
                 if (exitButton.isReleased(mousePoint))
                 {
                     CloseWindow();
@@ -130,14 +128,11 @@ int main(void)
                 }
             } break;
 
-            case SETTINGS:
+            case OPTIONS:
             {
                 UpdateMusicStream(menu);
+                if (fullscreenButton.isReleased(mousePoint)) ToggleFullscreen();
                 if (backButton.isReleased(mousePoint)) currentScreen = MENU;
-                if (fullscreenButton.isReleased(mousePoint))
-                {
-                    ToggleFullscreen();
-                }
             } break;
 
             case INGAME:
@@ -258,7 +253,7 @@ int main(void)
                     DrawTextEx(GetFontDefault(), "Exit", {exitButton.position.x + (exitButton.width / 2) - MeasureTextEx(GetFontDefault(), "Exit", (float)150, 15).x/2, exitButton.position.y + (exitButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
 
-                case SETTINGS:
+                case OPTIONS:
                 {
                     ClearBackground(BLACK);
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
