@@ -93,10 +93,10 @@ int main(void)
     AudioButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
     Button fullscreenButton;
     fullscreenButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
-    Button retryButton;
-    retryButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button backButton;
     backButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
+    Button retryButton;
+    retryButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
 
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
     Texture2D checkerboardMenuTexture = LoadTextureFromImage(checkerboardMenuImage);
@@ -155,6 +155,8 @@ int main(void)
                 if (greenSquareX < 0) greenSquareX = 0;
                 if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
                 if (greenSquareX > (screenWidth - greenSquareSize)) greenSquareX = screenWidth - greenSquareSize;
+
+                if (paused and backButton.isReleased(mousePoint)) {StopMusicStream(musPaused); PlayMusicStream(menu); currentScreen = MENU; paused = false;}
 
                 if (!paused)
                 {
@@ -274,7 +276,7 @@ int main(void)
 
                         DrawRectangleRec(greenSquareBox, greenSquareColor);
 
-                        DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                        if (!paused) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
                         if (rayActivated) DrawRectangleRec(greenSquareLight, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
                         if (rayActivated) DrawRectangleRec(ray, rayColor), DrawRectangleRec(greenSquareBox, GREEN);
@@ -283,7 +285,16 @@ int main(void)
                         DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE);
                         DrawText(TextFormat("High score: %i", highScore), 10, 130, 50, WHITE);
 
-                        if (paused) DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)50, 5).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)50, 5).x/4}, 50, 5, WHITE);
+                        if (paused) 
+                        {
+                            backButton.draw(mousePoint);
+
+                            DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                            
+                            DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+
+                            DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)100, 10).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
+                        }
 
                     EndShaderMode();
                 } break;
