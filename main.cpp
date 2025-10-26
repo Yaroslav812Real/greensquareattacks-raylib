@@ -281,10 +281,6 @@ int main(void)
                         if (rayActivated) DrawRectangleRec(greenSquareLight, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
                         if (rayActivated) DrawRectangleRec(ray, rayColor), DrawRectangleRec(greenSquareBox, GREEN);
 
-                        DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE);
-                        DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE);
-                        DrawText(TextFormat("High score: %i", highScore), 10, 130, 50, WHITE);
-
                         if (paused) 
                         {
                             backButton.draw(mousePoint);
@@ -295,6 +291,10 @@ int main(void)
 
                             DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)100, 10).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
                         }
+
+                        DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE);
+                        DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE);
+                        DrawText(TextFormat("High score: %i", highScore), 10, 130, 50, WHITE);
 
                     EndShaderMode();
                 } break;
