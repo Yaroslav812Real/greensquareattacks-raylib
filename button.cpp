@@ -8,13 +8,13 @@ Button::Button()
 
 void Button::draw(Vector2 mousePoint)
 {
-    DrawRectangleV({position}, {width, height}, color);
+    DrawRectangleV({position}, {(float)buttonWidth, (float)buttonHeight}, color);
     changeColor(mousePoint);
 }
 
 bool Button::isHovered(Vector2 mousePoint)
 {
-    Rectangle rect = {position.x, position.y, static_cast<float>(width), static_cast<float>(height)};
+    Rectangle rect = {position.x, position.y, (float)buttonWidth, (float)buttonHeight};
     if (CheckCollisionPointRec(mousePoint, rect)) return true;
     return false;
 }

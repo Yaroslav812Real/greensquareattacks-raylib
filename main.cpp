@@ -16,11 +16,8 @@ const int screenWidth = 1280; const int screenHeight = 720;
 
 GameScreen currentScreen = MENU;
 
-Rectangle buttonRec = {0, 0, screenWidth / 2.5, screenHeight / 2.5};
-Rectangle buttonBounds = {screenWidth / 2.0f - buttonRec.width / 2.0f, screenHeight / 2.0f - buttonRec.height / 2.0f, (float)buttonRec.width, buttonRec.height};
-Color buttonColor = GREEN;
-int buttonState = 0;
-bool buttonAction = false;
+float buttonWidth = screenWidth / 1.5;
+float buttonHeight = screenHeight / 4;
 
 bool paused = false;
 
@@ -87,19 +84,19 @@ int main(void)
     Rectangle rayLight;
 
     Button startButton;
-    startButton.position = {(screenWidth / 2) - (startButton.width / 2), (screenHeight / 5)};
+    startButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
     Button optionsButton;
-    optionsButton.position = {(screenWidth / 2) - (optionsButton.width / 2), (screenHeight / 5) + optionsButton.height};
+    optionsButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button exitButton;
-    exitButton.position = {screenWidth / 2 - (exitButton.width / 2), (screenHeight / 5) + (exitButton.height * 2)};
+    exitButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
     Button AudioButton;
-    AudioButton.position = {(screenWidth / 2) - (AudioButton.width / 2), (screenHeight / 5)};
+    AudioButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
     Button fullscreenButton;
-    fullscreenButton.position = {screenWidth / 2 - (fullscreenButton.width / 2), (screenHeight / 5) + fullscreenButton.height};
+    fullscreenButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button retryButton;
-    retryButton.position = {screenWidth / 2 - (retryButton.width / 2), (screenHeight / 5) + retryButton.height};
+    retryButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button backButton;
-    backButton.position = {screenWidth / 2 - (backButton.width / 2), (screenHeight / 5) + (backButton.height * 2)};
+    backButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
 
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
     Texture2D checkerboardMenuTexture = LoadTextureFromImage(checkerboardMenuImage);
@@ -247,9 +244,9 @@ int main(void)
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
                     DrawTextEx(GetFontDefault(), "Green Square Attacks", {(screenWidth / 2) - MeasureTextEx(GetFontDefault(), "Green Square Attacks", (float)100, 10).x/2, 75 - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
-                    DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (startButton.width / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (startButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Options", {optionsButton.position.x + (optionsButton.width / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, optionsButton.position.y + (optionsButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Exit", {exitButton.position.x + (exitButton.width / 2) - MeasureTextEx(GetFontDefault(), "Exit", (float)150, 15).x/2, exitButton.position.y + (exitButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Options", {optionsButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Options", (float)150, 15).x/2, optionsButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Exit", {exitButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Exit", (float)150, 15).x/2, exitButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
 
                 case OPTIONS:
@@ -263,8 +260,8 @@ int main(void)
 
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
-                    DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenButton.position.x + (fullscreenButton.width / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, fullscreenButton.position.y + (fullscreenButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (backButton.width / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (backButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, fullscreenButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
 
                 case INGAME:
@@ -302,8 +299,8 @@ int main(void)
 
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
-                    DrawTextEx(GetFontDefault(), "Retry", {retryButton.position.x + (retryButton.width / 2) - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, retryButton.position.y + (retryButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (backButton.width / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (backButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Retry", {retryButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, retryButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
 
                     DrawText(TextFormat("Energy: N/A"), 10, 10, 50, WHITE);
                     DrawText(TextFormat("Score: N/A"), 10, 70, 50, WHITE);
