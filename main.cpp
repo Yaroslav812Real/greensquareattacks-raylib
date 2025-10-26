@@ -89,17 +89,17 @@ int main(void)
     Button startButton;
     startButton.position = {(screenWidth / 2) - (startButton.width / 2), (screenHeight / 5)};
     Button optionsButton;
-    optionsButton.position = {(screenWidth / 2) - (optionsButton.width / 2), screenHeight / 5 + optionsButton.height};
+    optionsButton.position = {(screenWidth / 2) - (optionsButton.width / 2), (screenHeight / 5) + optionsButton.height};
     Button exitButton;
-    exitButton.position = {screenWidth / 2 - (optionsButton.width / 2), (screenHeight / 5) + optionsButton.height + exitButton.height};
+    exitButton.position = {screenWidth / 2 - (exitButton.width / 2), (screenHeight / 5) + (exitButton.height * 2)};
     Button AudioButton;
     AudioButton.position = {(screenWidth / 2) - (AudioButton.width / 2), (screenHeight / 5)};
     Button fullscreenButton;
-    fullscreenButton.position = {screenWidth / 2 - (AudioButton.width / 2), (screenHeight / 5) + fullscreenButton.height};
-    Button backButton;
-    backButton.position = {screenWidth / 2 - (AudioButton.width / 2), (screenHeight / 5) + fullscreenButton.height + backButton.height};
+    fullscreenButton.position = {screenWidth / 2 - (fullscreenButton.width / 2), (screenHeight / 5) + fullscreenButton.height};
     Button retryButton;
-    retryButton.position = {screenWidth / 2 - (retryButton.width / 2), screenHeight / 2 - (retryButton.height / 2)};
+    retryButton.position = {screenWidth / 2 - (retryButton.width / 2), (screenHeight / 5) + retryButton.height};
+    Button backButton;
+    backButton.position = {screenWidth / 2 - (backButton.width / 2), (screenHeight / 5) + (backButton.height * 2)};
 
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
     Texture2D checkerboardMenuTexture = LoadTextureFromImage(checkerboardMenuImage);
@@ -118,7 +118,7 @@ int main(void)
 
                 highScore = LoadStorageValue(STORAGE_POSITION_HIGHSCORE);
 
-                if (startButton.isReleased(mousePoint)) ResetGame(), PlayMusicStream(mus), currentScreen = INGAME;
+                if (startButton.isReleased(mousePoint)) StopMusicStream(menu), ResetGame(), PlayMusicStream(mus), currentScreen = INGAME;
                 if (optionsButton.isReleased(mousePoint)) currentScreen = OPTIONS;
                 if (exitButton.isReleased(mousePoint)) {CloseWindow(); return 0;}
             } break;
@@ -162,56 +162,56 @@ int main(void)
                 if (!paused)
                 {
                 
-                if (redSquareColor.a < 255 and redSquareHealth >= redSquareOriginalHealth) redSquareColor.a += 5;
-                redSquareX += (int)(GetFrameTime()*60.0f*redSquareXSpeed);
-                redSquareY += (int)(GetFrameTime()*60.0f*redSquareYSpeed);
-                if ((redSquareX >= screenWidth - redSquareSize) or (redSquareX <= 0)) redSquareXSpeed *= -1;
-                if ((redSquareY >= screenHeight - redSquareSize) or (redSquareY <= 0)) redSquareYSpeed *= -1;
-                if (redSquareDestroyed) ResetRedSquare();
+                    if (redSquareColor.a < 255 and redSquareHealth >= redSquareOriginalHealth) redSquareColor.a += 5;
+                    redSquareX += (int)(GetFrameTime()*60.0f*redSquareXSpeed);
+                    redSquareY += (int)(GetFrameTime()*60.0f*redSquareYSpeed);
+                    if ((redSquareX >= screenWidth - redSquareSize) or (redSquareX <= 0)) redSquareXSpeed *= -1;
+                    if ((redSquareY >= screenHeight - redSquareSize) or (redSquareY <= 0)) redSquareYSpeed *= -1;
+                    if (redSquareDestroyed) ResetRedSquare();
 
-                if (!rayColorReverse and rayColor.g < 255) rayColor.g+=15;
-                if (rayColor.g == 255) rayColorReverse = true;
-                if (rayColorReverse and rayColor.g > 0) rayColor.g-=15;
-                if (rayColor.g == 0) rayColorReverse = false;
+                    if (!rayColorReverse and rayColor.g < 255) rayColor.g+=15;
+                    if (rayColor.g == 255) rayColorReverse = true;
+                    if (rayColorReverse and rayColor.g > 0) rayColor.g-=15;
+                    if (rayColor.g == 0) rayColorReverse = false;
 
-                if (greenSquareColor.a < 255) greenSquareColor.a += 5;
+                    if (greenSquareColor.a < 255) greenSquareColor.a += 5;
 
-                if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= (int)(GetFrameTime()*60.0f*greenSquareSpeed);
-                if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += (int)(GetFrameTime()*60.0f*greenSquareSpeed);
-                if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
-                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
-                if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
+                    if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= (int)(GetFrameTime()*60.0f*greenSquareSpeed);
+                    if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += (int)(GetFrameTime()*60.0f*greenSquareSpeed);
+                    if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
+                    if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
+                    if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
 
-                if (rayActivated and rayEnergy > 0) rayEnergy--;
-                if (rayEnergy < 0) rayEnergy = 0;
+                    if (rayActivated and rayEnergy > 0) rayEnergy--;
+                    if (rayEnergy < 0) rayEnergy = 0;
 
-                if (greenSquareY < 0) greenSquareY = 0;
-                if (greenSquareX < 0) greenSquareX = 0;
-                if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
-                if (greenSquareX > (screenWidth - greenSquareSize)) greenSquareX = screenWidth - greenSquareSize;
+                    if (greenSquareY < 0) greenSquareY = 0;
+                    if (greenSquareX < 0) greenSquareX = 0;
+                    if (greenSquareY > (screenHeight - greenSquareSize)) greenSquareY = screenHeight - greenSquareSize;
+                    if (greenSquareX > (screenWidth - greenSquareSize)) greenSquareX = screenWidth - greenSquareSize;
 
-                enemyCollision = (CheckCollisionRecs(redSquare, greenSquareBox));
-                if (enemyCollision) GetCollisionRec(redSquare, greenSquareBox);
-                if (enemyCollision and redSquareColor.a == 255) ResetGame(), currentScreen = GAMEOVER;
+                    enemyCollision = (CheckCollisionRecs(redSquare, greenSquareBox));
+                    if (enemyCollision) GetCollisionRec(redSquare, greenSquareBox);
+                    if (enemyCollision and redSquareColor.a == 255) ResetGame(), currentScreen = GAMEOVER;
 
-                rayCollision = (CheckCollisionRecs(redSquare, ray));
-                if (rayCollision) GetCollisionRec(redSquare, ray);
-                if (redSquareColor.a == 255 and rayCollision and rayActivated)
-                {
-                    redSquareHealth--;
-                    if (redSquareColor.r > 0) redSquareColor.r-=10;
-                    if (redSquareXSpeed > 10) redSquareXSpeed--;
-                    if (redSquareXSpeed < -10) redSquareXSpeed++;
-                    if (redSquareYSpeed > 10) redSquareYSpeed--;
-                    if (redSquareYSpeed < -10) redSquareYSpeed++;
-                }
-                if (redSquareHealth <= 0)
-                {
-                    if (giveScore) {score++; if (score > highScore) {highScore = score; SaveStorageValue(STORAGE_POSITION_HIGHSCORE, highScore);} giveScore = false;}
-                    redSquareXSpeed = 0; redSquareYSpeed = 0;
-                    if (redSquareColor.a > 0) redSquareColor.a -= 20;
-                    if (redSquareColor.a == 15) redSquareColor.a = 0, redSquareDestroyed = true;
-                }
+                    rayCollision = (CheckCollisionRecs(redSquare, ray));
+                    if (rayCollision) GetCollisionRec(redSquare, ray);
+                    if (redSquareColor.a == 255 and rayCollision and rayActivated)
+                    {
+                        redSquareHealth--;
+                        if (redSquareColor.r > 0) redSquareColor.r-=10;
+                        if (redSquareXSpeed > 10) redSquareXSpeed--;
+                        if (redSquareXSpeed < -10) redSquareXSpeed++;
+                        if (redSquareYSpeed > 10) redSquareYSpeed--;
+                        if (redSquareYSpeed < -10) redSquareYSpeed++;
+                    }
+                    if (redSquareHealth <= 0)
+                    {
+                        if (giveScore) {score++; if (score > highScore) {highScore = score; SaveStorageValue(STORAGE_POSITION_HIGHSCORE, highScore);} giveScore = false;}
+                        redSquareXSpeed = 0; redSquareYSpeed = 0;
+                        if (redSquareColor.a > 0) redSquareColor.a -= 20;
+                        if (redSquareColor.a == 15) redSquareColor.a = 0, redSquareDestroyed = true;
+                    }
 
                 }
                 
@@ -225,9 +225,8 @@ int main(void)
                 if (!IsMusicStreamPlaying(gameOver)) PlayMusicStream(gameOver);
                 UpdateMusicStream(gameOver);
 
-                retryButton.changeColor(mousePoint);
-
                 if (retryButton.isReleased(mousePoint)) StopMusicStream(gameOver), PlayMusicStream(mus), currentScreen = INGAME;
+                if (backButton.isReleased(mousePoint)) StopMusicStream(gameOver), PlayMusicStream(menu), currentScreen = MENU;
             } break;
             default: break;
         }
@@ -299,10 +298,12 @@ int main(void)
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
 
                     retryButton.draw(mousePoint);
+                    backButton.draw(mousePoint);
 
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
-                    DrawTextEx(GetFontDefault(), "Retry", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Retry", {retryButton.position.x + (retryButton.width / 2) - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, retryButton.position.y + (retryButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (backButton.width / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (backButton.height / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
 
                     DrawText(TextFormat("Energy: N/A"), 10, 10, 50, WHITE);
                     DrawText(TextFormat("Score: N/A"), 10, 70, 50, WHITE);
