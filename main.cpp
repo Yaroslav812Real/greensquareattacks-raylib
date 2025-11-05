@@ -21,6 +21,8 @@ float buttonHeight = screenHeight / 4;
 
 bool paused = false;
 
+bool audio = true;
+
 const int redSquareOriginalHealth = 20;
 const int redSquareMinSize = screenHeight / 7.2;
 const int redSquareMaxSize = screenHeight / 2.4;
@@ -89,8 +91,8 @@ int main(void)
     optionsButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button exitButton;
     exitButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
-    Button AudioButton;
-    AudioButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
+    Button audioButton;
+    audioButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
     Button fullscreenButton;
     fullscreenButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button backButton;
@@ -111,7 +113,7 @@ int main(void)
         {
             case MENU:
             {
-                UpdateMusicStream(menu);
+                if (audio) UpdateMusicStream(menu);
 
                 highScore = LoadStorageValue(STORAGE_POSITION_HIGHSCORE);
 
@@ -122,8 +124,9 @@ int main(void)
 
             case OPTIONS:
             {
-                UpdateMusicStream(menu);
+                if (audio) UpdateMusicStream(menu);
 
+                if (audioButton.isReleased(mousePoint)) audio = !audio;
                 if (fullscreenButton.isReleased(mousePoint)) ToggleFullscreen();
                 if (backButton.isReleased(mousePoint)) currentScreen = MENU;
             } break;
@@ -131,10 +134,10 @@ int main(void)
             case INGAME:
             {
 
-                UpdateMusicStream(mus);
-                UpdateMusicStream(musPaused);
+                if (audio) UpdateMusicStream(mus);
+                if (audio) UpdateMusicStream(musPaused);
 
-                if (rayActivated and !IsSoundPlaying(raySound)) PlaySound(raySound);
+                if (rayActivated and !IsSoundPlaying(raySound) and audio) PlaySound(raySound);
                 if (!rayActivated and IsSoundPlaying(raySound)) StopSound(raySound);
 
                 if (IsKeyPressed(KEY_ENTER) or IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) paused = !paused;
@@ -222,7 +225,7 @@ int main(void)
 
                 StopMusicStream(mus);
                 if (!IsMusicStreamPlaying(gameOver)) PlayMusicStream(gameOver);
-                UpdateMusicStream(gameOver);
+                if (audio) UpdateMusicStream(gameOver);
 
                 if (retryButton.isReleased(mousePoint)) StopMusicStream(gameOver), PlayMusicStream(mus), currentScreen = INGAME;
                 if (backButton.isReleased(mousePoint)) StopMusicStream(gameOver), PlayMusicStream(menu), currentScreen = MENU;
@@ -257,11 +260,13 @@ int main(void)
 
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
 
+                    audioButton.draw(mousePoint);
                     fullscreenButton.draw(mousePoint);
                     backButton.draw(mousePoint);
 
                     DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
+                    DrawTextEx(GetFontDefault(), "Audio", {audioButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Audio", (float)150, 15).x/2, audioButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, fullscreenButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                 } break;
