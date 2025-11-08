@@ -30,8 +30,8 @@ const float redSquareMinSpeed = screenWidth / 96;
 const float redSquareMaxSpeed = screenWidth / 64;
 const Color redSquareOriginalColor = RED;
 int redSquareSize;
-int redSquareX;
-int redSquareY;
+float redSquareX;
+float redSquareY;
 int redSquareHealth = redSquareOriginalHealth;
 float redSquareXSpeed;
 float redSquareYSpeed;
@@ -46,8 +46,8 @@ const int greenSquareOriginalY = screenHeight - greenSquareOriginalSize;
 const float greenSquareOriginalSpeed = screenWidth / 64;
 const Color greenSquareOriginalColor = GREEN;
 int greenSquareSize = screenHeight / 7.2;
-int greenSquareX = greenSquareOriginalX;
-int greenSquareY = greenSquareOriginalY;
+float greenSquareX = greenSquareOriginalX;
+float greenSquareY = greenSquareOriginalY;
 float greenSquareSpeed = greenSquareOriginalSpeed;
 Color greenSquareColor = greenSquareOriginalColor;
 bool enemyCollision = false;
@@ -72,6 +72,7 @@ int main(void)
     Shader grayscale = LoadShader(0, "grayscale.fs");
 
     Music menu = LoadMusicStream("mus_menu.ogg");
+    Music settings = LoadMusicStream("mus_settings.ogg");
     Music mus = LoadMusicStream("mus_sampletext.ogg");
     Music musPaused = LoadMusicStream("mus_sampletextpaused.ogg");
     Music gameOver = LoadMusicStream("mus_gameover.ogg");
@@ -118,17 +119,17 @@ int main(void)
                 highScore = LoadStorageValue(STORAGE_POSITION_HIGHSCORE);
 
                 if (startButton.isReleased(mousePoint)) StopMusicStream(menu), ResetGame(), PlayMusicStream(mus), currentScreen = INGAME;
-                if (optionsButton.isReleased(mousePoint)) currentScreen = OPTIONS;
+                if (optionsButton.isReleased(mousePoint)) StopMusicStream(menu), PlayMusicStream(settings), currentScreen = OPTIONS;
                 if (exitButton.isReleased(mousePoint)) {CloseWindow(); return 0;}
             } break;
 
             case OPTIONS:
             {
-                if (audio) UpdateMusicStream(menu);
+                if (audio) UpdateMusicStream(settings);
 
                 if (audioButton.isReleased(mousePoint)) audio = !audio;
                 if (fullscreenButton.isReleased(mousePoint)) ToggleFullscreen();
-                if (backButton.isReleased(mousePoint)) currentScreen = MENU;
+                if (backButton.isReleased(mousePoint)) StopMusicStream(settings), PlayMusicStream(menu), currentScreen = MENU;
             } break;
 
             case INGAME:
