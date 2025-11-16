@@ -9,6 +9,9 @@ class Button
 {
     public:
         Vector2 position;
+        Vector2 size = {buttonWidth, buttonHeight};
+        bool toggleButton = false;
+        bool toggle = false;
         Button();
         void draw(Vector2 mousePoint);
         bool isHovered(Vector2 mousePoint);
@@ -16,6 +19,6 @@ class Button
         bool isReleased(Vector2 mousePoint);
         void changeColor(Vector2 mousePoint);
     private:
-        int state = 0;
+        int transparency = 255;
         Color color = GREEN;
 };

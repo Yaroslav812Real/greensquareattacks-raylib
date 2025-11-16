@@ -18,18 +18,25 @@ GameScreen currentScreen = MENU;
 
 float buttonWidth = screenWidth / 1.5;
 float buttonHeight = screenHeight / 4;
+float buttonMiniWidth = screenWidth / 3;
+float buttonMiniHeight = screenHeight / 8;
 
 bool paused = false;
 
 bool audio = true;
+bool fullscreen = false;
+bool vsync = true;
+bool gradient = true;
+bool squares = false;
 
 const int redSquareOriginalHealth = 20;
-const int redSquareMinSize = screenHeight / 7.2;
+const int redSquareMinSize = screenHeight / 14.4;
 const int redSquareMaxSize = screenHeight / 2.4;
-const float redSquareMinSpeed = screenWidth / 96;
-const float redSquareMaxSpeed = screenWidth / 64;
+const float redSquareMinSpeed = screenWidth / 64;
+const float redSquareMaxSpeed = screenWidth / 48;
 const Color redSquareOriginalColor = RED;
-int redSquareSize;
+int redSquareXSize;
+int redSquareYSize;
 float redSquareX;
 float redSquareY;
 int redSquareHealth = redSquareOriginalHealth;
@@ -64,10 +71,10 @@ int highScore = 0;
 
 int main(void)
 {
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "Yarix game");
     InitAudioDevice();
-    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-    SetConfigFlags(FLAG_VSYNC_HINT);
+    SetTargetFPS(60);
 
     Shader grayscale = LoadShader(0, "grayscale.fs");
 
@@ -92,14 +99,38 @@ int main(void)
     optionsButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
     Button exitButton;
     exitButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
-    Button audioButton;
-    audioButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5)};
-    Button fullscreenButton;
-    fullscreenButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
-    Button backButton;
-    backButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
+    Button audioMiniButton;
+    audioMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10)};
+    audioMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
+    audioMiniButton.toggleButton = true;
+    audioMiniButton.toggle = true;
+    Button fullscreenMiniButton;
+    fullscreenMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10) + buttonMiniHeight};
+    fullscreenMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
+    fullscreenMiniButton.toggleButton = true;
+    Button vsyncMiniButton;
+    vsyncMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10) + (buttonMiniHeight * 2)};
+    vsyncMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
+    vsyncMiniButton.toggleButton = true;
+    vsyncMiniButton.toggle = true;
+    Button gradientMiniButton;
+    gradientMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10) + (buttonMiniHeight * 3)};
+    gradientMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
+    gradientMiniButton.toggleButton = true;
+    gradientMiniButton.toggle = true;
+    Button squaresMiniButton;
+    squaresMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10) + (buttonMiniHeight * 4)};
+    squaresMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
+    squaresMiniButton.toggleButton = true;
+    Button backMiniButton;
+    backMiniButton.position = {(screenWidth / 2) - (buttonMiniWidth / 2), (screenHeight / 10) + (buttonMiniHeight * 6)};
+    backMiniButton.size = {buttonMiniWidth, buttonMiniHeight};
     Button retryButton;
     retryButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + buttonHeight};
+    retryButton.size = {buttonWidth, buttonHeight};
+    Button backButton;
+    backButton.position = {(screenWidth / 2) - (buttonWidth / 2), (screenHeight / 5) + (buttonHeight * 2)};
+    backButton.size = {buttonWidth, buttonHeight};
 
     Image checkerboardMenuImage = GenImageChecked(screenWidth, screenHeight, screenHeight / 5, screenHeight / 5, DARKGRAY, BLACK);
     Texture2D checkerboardMenuTexture = LoadTextureFromImage(checkerboardMenuImage);
@@ -127,9 +158,17 @@ int main(void)
             {
                 if (audio) UpdateMusicStream(settings);
 
-                if (audioButton.isReleased(mousePoint)) audio = !audio;
-                if (fullscreenButton.isReleased(mousePoint)) ToggleFullscreen();
-                if (backButton.isReleased(mousePoint)) StopMusicStream(settings), PlayMusicStream(menu), currentScreen = MENU;
+                if (audioMiniButton.isReleased(mousePoint)) audio = !audio;
+                if ((audio and !audioMiniButton.toggle) or (!audio and audioMiniButton.toggle)) audioMiniButton.toggle = !audioMiniButton.toggle;
+                if (fullscreenMiniButton.isReleased(mousePoint)) fullscreen = !fullscreen, ToggleFullscreen();
+                if ((fullscreen and !fullscreenMiniButton.toggle) or (!fullscreen and fullscreenMiniButton.toggle)) fullscreenMiniButton.toggle = !fullscreenMiniButton.toggle;
+                if (vsyncMiniButton.isReleased(mousePoint)) vsync = !vsync, SetConfigFlags(FLAG_VSYNC_HINT);
+                if ((vsync and !vsyncMiniButton.toggle) or (!vsync and vsyncMiniButton.toggle)) vsyncMiniButton.toggle = !vsyncMiniButton.toggle;
+                if (gradientMiniButton.isReleased(mousePoint)) gradient = !gradient;
+                if ((gradient and !gradientMiniButton.toggle) or (!gradient and gradientMiniButton.toggle)) gradientMiniButton.toggle = !gradientMiniButton.toggle;
+                if (squaresMiniButton.isReleased(mousePoint)) squares = !squares;
+                if ((squares and !squaresMiniButton.toggle) or (!squares and squaresMiniButton.toggle)) squaresMiniButton.toggle = !squaresMiniButton.toggle;
+                if (backMiniButton.isReleased(mousePoint)) StopMusicStream(settings), PlayMusicStream(menu), currentScreen = MENU;
             } break;
 
             case INGAME:
@@ -145,11 +184,11 @@ int main(void)
                 if (paused and IsMusicStreamPlaying(mus)) StopMusicStream(mus), PlayMusicStream(musPaused);
                 if (!paused and !IsMusicStreamPlaying(mus)) StopMusicStream(musPaused), PlayMusicStream(mus);
 
-                redSquare = {(float)redSquareX, (float)redSquareY, (float)redSquareSize, (float)redSquareSize};
+                redSquare = {(float)redSquareX, (float)redSquareY, (float)redSquareXSize, (float)redSquareYSize};
                 if (redSquareY < 0) redSquareY = 0;
                 if (redSquareX < 0) redSquareX = 0;
-                if (redSquareY > (screenHeight - redSquareSize)) redSquareY = screenHeight - redSquareSize;
-                if (redSquareX > (screenWidth - redSquareSize)) redSquareX = screenWidth - redSquareSize;
+                if (redSquareY > (screenHeight - redSquareYSize)) redSquareY = screenHeight - redSquareYSize;
+                if (redSquareX > (screenWidth - redSquareXSize)) redSquareX = screenWidth - redSquareXSize;
 
                 greenSquareBox = {(float)greenSquareX, (float)greenSquareY, (float)greenSquareSize, (float)greenSquareSize};
                 ray = {(float)greenSquareX + (greenSquareSize / 4), 0, (float)greenSquareSize / 2, (float)screenHeight - (greenSquareSize / 2)};
@@ -166,10 +205,10 @@ int main(void)
                 {
                 
                     if (redSquareColor.a < 255 and redSquareHealth >= redSquareOriginalHealth) redSquareColor.a += 5;
-                    redSquareX += (int)(GetFrameTime()*60.0f*redSquareXSpeed);
-                    redSquareY += (int)(GetFrameTime()*60.0f*redSquareYSpeed);
-                    if ((redSquareX >= screenWidth - redSquareSize) or (redSquareX <= 0)) redSquareXSpeed *= -1;
-                    if ((redSquareY >= screenHeight - redSquareSize) or (redSquareY <= 0)) redSquareYSpeed *= -1;
+                    redSquareX += redSquareXSpeed;
+                    redSquareY += redSquareYSpeed;
+                    if ((redSquareX >= screenWidth - redSquareXSize) or (redSquareX <= 0)) redSquareXSpeed *= -1;
+                    if ((redSquareY >= screenHeight - redSquareYSize) or (redSquareY <= 0)) redSquareYSpeed *= -1;
                     if (redSquareDestroyed) ResetRedSquare();
 
                     if (!rayColorReverse and rayColor.g < 255) rayColor.g+=15;
@@ -179,8 +218,8 @@ int main(void)
 
                     if (greenSquareColor.a < 255) greenSquareColor.a += 5;
 
-                    if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= (int)(GetFrameTime()*60.0f*greenSquareSpeed);
-                    if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += (int)(GetFrameTime()*60.0f*greenSquareSpeed);
+                    if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= greenSquareSpeed;
+                    if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += greenSquareSpeed;
                     if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
                     if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
                     if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
@@ -247,7 +286,7 @@ int main(void)
                     optionsButton.draw(mousePoint);
                     exitButton.draw(mousePoint);
 
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                    if (gradient) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
                     DrawTextEx(GetFontDefault(), "Green Square Attacks", {(screenWidth / 2) - MeasureTextEx(GetFontDefault(), "Green Square Attacks", (float)100, 10).x/2, 75 - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
                     DrawTextEx(GetFontDefault(), "Play", {startButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/2, startButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
@@ -261,15 +300,21 @@ int main(void)
 
                     DrawTexture(checkerboardMenuTexture, 0, 0, WHITE);
 
-                    audioButton.draw(mousePoint);
-                    fullscreenButton.draw(mousePoint);
-                    backButton.draw(mousePoint);
+                    audioMiniButton.draw(mousePoint);
+                    fullscreenMiniButton.draw(mousePoint);
+                    vsyncMiniButton.draw(mousePoint);
+                    gradientMiniButton.draw(mousePoint);
+                    squaresMiniButton.draw(mousePoint);
+                    backMiniButton.draw(mousePoint);
 
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                    if (gradient) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
-                    DrawTextEx(GetFontDefault(), "Audio", {audioButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Audio", (float)150, 15).x/2, audioButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)150, 15).x/2, fullscreenButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-                    DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+                    DrawTextEx(GetFontDefault(), "Audio", {audioMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "Audio", (float)75, 7.5).x/2, audioMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
+                    DrawTextEx(GetFontDefault(), "Fullscreen", {fullscreenMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "Fullscreen", (float)75, 7.5).x/2, fullscreenMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
+                    DrawTextEx(GetFontDefault(), "V-Sync", {vsyncMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "V-Sync", (float)75, 7.5).x/2, vsyncMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
+                    DrawTextEx(GetFontDefault(), "Gradient", {gradientMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "Gradient", (float)75, 7.5).x/2, gradientMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
+                    DrawTextEx(GetFontDefault(), "Squares", {squaresMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "Squares", (float)75, 7.5).x/2, squaresMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
+                    DrawTextEx(GetFontDefault(), "Back", {backMiniButton.position.x + (buttonMiniWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)75, 7.5).x/2, backMiniButton.position.y + (buttonMiniHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)75, 7.5).x/4}, 75, 7.5, WHITE);
                 } break;
 
                 case INGAME:
@@ -282,27 +327,27 @@ int main(void)
 
                         DrawRectangleRec(greenSquareBox, greenSquareColor);
 
-                        if (!paused) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                        if (!paused and gradient) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
                         if (rayActivated) DrawRectangleRec(greenSquareLight, {255, 255, 255, 50}), DrawRectangleRec(rayLight, {255, 255, 255, 50});
                         if (rayActivated) DrawRectangleRec(ray, rayColor), DrawRectangleRec(greenSquareBox, GREEN);
-
-                        if (paused) 
-                        {
-                            backButton.draw(mousePoint);
-
-                            DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
-                            
-                            DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
-
-                            DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)100, 10).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
-                        }
-
-                        DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE);
-                        DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE);
-                        DrawText(TextFormat("High score: %i", highScore), 10, 130, 50, WHITE);
-
+                    
                     EndShaderMode();
+
+                    if (paused) 
+                    {
+                        backButton.draw(mousePoint);
+
+                        if (gradient) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                            
+                        DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
+
+                        DrawTextEx(GetFontDefault(), "Paused", {screenWidth / 2.0f - MeasureTextEx(GetFontDefault(), "Paused", (float)100, 10).x/2, screenHeight / 2.0f - MeasureTextEx(GetFontDefault(), "Play", (float)100, 10).x/4}, 100, 10, WHITE);
+                    }
+
+                    DrawText(TextFormat("Energy: %03i", rayEnergy), 10, 10, 50, WHITE);
+                    DrawText(TextFormat("Score: %i", score), 10, 70, 50, WHITE);
+                    DrawText(TextFormat("High score: %i", highScore), 10, 130, 50, WHITE);
                 } break;
 
                 case GAMEOVER:
@@ -314,7 +359,7 @@ int main(void)
                     retryButton.draw(mousePoint);
                     backButton.draw(mousePoint);
 
-                    DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
+                    if (gradient) DrawRectangleGradientV(0, 0, screenWidth, screenHeight, BLANK, {0, 0, 0, 200});
 
                     DrawTextEx(GetFontDefault(), "Retry", {retryButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Retry", (float)150, 15).x/2, retryButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
                     DrawTextEx(GetFontDefault(), "Back", {backButton.position.x + (buttonWidth / 2) - MeasureTextEx(GetFontDefault(), "Back", (float)150, 15).x/2, backButton.position.y + (buttonHeight / 2) - MeasureTextEx(GetFontDefault(), "Play", (float)150, 15).x/4}, 150, 15, WHITE);
@@ -329,6 +374,7 @@ int main(void)
     }
     UnloadShader(grayscale);
     UnloadMusicStream(menu);
+    UnloadMusicStream(settings);
     UnloadMusicStream(mus);
     UnloadMusicStream(musPaused);
     UnloadMusicStream(gameOver);
@@ -341,10 +387,12 @@ int main(void)
 
 void ResetGame(void)
 {
-    redSquareX = GetRandomValue(0, screenWidth - redSquareSize);
-    redSquareY = GetRandomValue(0, screenHeight - redSquareSize);
-    redSquareSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
-    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareX = GetRandomValue(0, screenWidth - redSquareXSize);
+    redSquareY = GetRandomValue(0, screenHeight - redSquareYSize);
+    redSquareXSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    if (!squares) redSquareYSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    else redSquareYSize = redSquareXSize;
+    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed) / 2;
     redSquareYSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
     redSquareHealth = redSquareOriginalHealth;
     redSquareColor = redSquareOriginalColor;
@@ -368,10 +416,12 @@ void ResetGame(void)
 
 void ResetRedSquare(void)
 {
-    redSquareX = GetRandomValue(0, screenWidth - redSquareSize);
-    redSquareY = GetRandomValue(0, screenHeight - redSquareSize);
-    redSquareSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
-    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
+    redSquareX = GetRandomValue(0, screenWidth - redSquareXSize);
+    redSquareY = GetRandomValue(0, screenHeight - redSquareYSize);
+    redSquareXSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    if (!squares) redSquareYSize = GetRandomValue(redSquareMinSize, redSquareMaxSize);
+    else redSquareYSize = redSquareXSize;
+    redSquareXSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed) / 2;
     redSquareYSpeed = GetRandomValue(redSquareMinSpeed, redSquareMaxSpeed);
     redSquareHealth = redSquareOriginalHealth;
     redSquareColor = redSquareOriginalColor;

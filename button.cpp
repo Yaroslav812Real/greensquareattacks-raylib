@@ -1,5 +1,4 @@
 #include "button.hpp"
-#include "iostream"
 
 Button::Button()
 {
@@ -8,13 +7,13 @@ Button::Button()
 
 void Button::draw(Vector2 mousePoint)
 {
-    DrawRectangleV({position}, {(float)buttonWidth, (float)buttonHeight}, color);
+    DrawRectangleV({position}, {(float)size.x, (float)size.y}, color);
     changeColor(mousePoint);
 }
 
 bool Button::isHovered(Vector2 mousePoint)
 {
-    Rectangle rect = {position.x, position.y, (float)buttonWidth, (float)buttonHeight};
+    Rectangle rect = {position.x, position.y, (float)size.x, (float)size.y};
     if (CheckCollisionPointRec(mousePoint, rect)) return true;
     return false;
 }
@@ -33,23 +32,11 @@ bool Button::isReleased(Vector2 mousePoint)
 
 void Button::changeColor(Vector2 mousePoint)
 {
-    if (!isHovered(mousePoint)) state = 0;
-    if (isHovered(mousePoint)) state = 1;
-    if (isHovered(mousePoint) and IsMouseButtonDown(MOUSE_BUTTON_LEFT)) state = 2;
-    switch(state)
-    {
-        case 0:
-            color = GREEN;
-        break;
-
-        case 1:
-            color = YELLOW;
-        break;
-
-        case 2:
-            color = RED;
-        break;
-        
-        default: break;
-    }
+    color.a = transparency;
+    if (!isHovered(mousePoint) and !isPressed(mousePoint)) transparency = 255;
+    if (isHovered(mousePoint)) transparency = 127;
+    if (!toggleButton and isPressed(mousePoint)) transparency = 48;
+    if (toggleButton and toggle) {color = GREEN; color.a = transparency;}
+    if (toggleButton and !toggle) {color = RED; color.a = transparency;}
+    if (toggleButton and isReleased(mousePoint)) toggle = !toggle;
 }
