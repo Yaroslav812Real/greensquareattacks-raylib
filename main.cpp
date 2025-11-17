@@ -141,6 +141,10 @@ int main(void)
     while (!WindowShouldClose())
     {
         Vector2 mousePoint = GetMousePosition();
+        const bool keyLeft = (IsKeyDown(KEY_A) or IsKeyDown(KEY_LEFT));
+        const bool keyRight = (IsKeyDown(KEY_D) or IsKeyDown(KEY_RIGHT));
+        const bool keyShoot = IsKeyDown(KEY_SPACE);
+        const bool keyPause = IsKeyPressed(KEY_ENTER);
         switch(currentScreen)
         {
             case MENU:
@@ -180,7 +184,7 @@ int main(void)
                 if (rayActivated and !IsSoundPlaying(raySound) and audio) PlaySound(raySound);
                 if (!rayActivated and IsSoundPlaying(raySound)) StopSound(raySound);
 
-                if (IsKeyPressed(KEY_ENTER) or IsGamepadButtonPressed(0, GAMEPAD_BUTTON_MIDDLE_RIGHT)) paused = !paused;
+                if (keyPause) paused = !paused;
                 if (paused and IsMusicStreamPlaying(mus)) StopMusicStream(mus), PlayMusicStream(musPaused);
                 if (!paused and !IsMusicStreamPlaying(mus)) StopMusicStream(musPaused), PlayMusicStream(mus);
 
@@ -218,11 +222,11 @@ int main(void)
 
                     if (greenSquareColor.a < 255) greenSquareColor.a += 5;
 
-                    if ((IsKeyDown(KEY_A)) or (IsKeyDown(KEY_LEFT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) < -0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))) and greenSquareX > 0) greenSquareX -= greenSquareSpeed;
-                    if ((IsKeyDown(KEY_D)) or (IsKeyDown(KEY_RIGHT)) or (GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X) > 0.5 or (IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))) and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += greenSquareSpeed;
-                    if (((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy > 0) rayActivated = true;
-                    if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) or rayEnergy <= 0) rayActivated = false;
-                    if (!((IsKeyDown(KEY_SPACE)) or IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
+                    if (keyLeft and greenSquareX > 0) greenSquareX -= greenSquareSpeed;
+                    if (keyRight and greenSquareX < (screenWidth - greenSquareSize)) greenSquareX += greenSquareSpeed;
+                    if (keyShoot and rayEnergy > 0) rayActivated = true;
+                    if (!keyShoot or rayEnergy <= 0) rayActivated = false;
+                    if (!keyShoot and rayEnergy < 100) rayEnergy++; if (rayEnergy > 100) rayEnergy = 100;
 
                     if (rayActivated and rayEnergy > 0) rayEnergy--;
                     if (rayEnergy < 0) rayEnergy = 0;
